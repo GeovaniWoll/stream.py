@@ -144,29 +144,30 @@ def main():
         st.write(bank.head())
 
         # Criação dos gráficos
-    st.write('## Proporção de aceite')
+       st.write('## Proporção de aceite')
 
-    # Gráfico de barras para os dados brutos
-    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
-    sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
-    ax[0].set_title('Dados brutos', fontweight="bold")
-    ax[0].set_xlabel('y')
-    ax[0].set_ylabel('Porcentagem')
-    ax[0].set_xticklabels(bank_raw_target_perc.index, rotation=45)
+    if not bank_raw_target_perc.empty:
+        # Gráfico de barras para os dados brutos
+        fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+        sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
+        ax[0].set_title('Dados brutos', fontweight="bold")
+        ax[0].set_xlabel('y')
+        ax[0].set_ylabel('Porcentagem')
+        ax[0].set_xticklabels(bank_raw_target_perc.index, rotation=45)
 
-    # Gráfico de barras para os dados filtrados
-    sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
-    ax[1].set_title('Dados filtrados', fontweight="bold")
-    ax[1].set_xlabel('y')
-    ax[1].set_ylabel('Porcentagem')
-    ax[1].set_xticklabels(bank_target_perc.index, rotation=45)
+    if not bank_target_perc.empty:
+        # Gráfico de barras para os dados filtrados
+        sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
+        ax[1].set_title('Dados filtrados', fontweight="bold")
+        ax[1].set_xlabel('y')
+        ax[1].set_ylabel('Porcentagem')
+        ax[1].set_xticklabels(bank_target_perc.index, rotation=45)
 
-    # Exibe os gráficos
-    st.pyplot(fig)
+        # Exibe os gráficos
+        st.pyplot(fig)
 
 if __name__ == '__main__':
     main()
-
 
 
 
