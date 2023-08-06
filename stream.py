@@ -145,12 +145,21 @@ def main():
         st.write(bank.head())
 
         # Criação dos gráficos
-        st.write('## Proporção de aceite')
-        
+st.write('## Proporção de aceite')
+
+        # Calcula a proporção de aceite para os dados brutos
+        bank_raw_target_perc = bank_raw['y'].value_counts(normalize=True) * 100
+        bank_raw_target_perc = bank_raw_target_perc.sort_index()
+
+        # Calcula a proporção de aceite para os dados filtrados
+        if not bank.empty:
+            bank_target_perc = bank['y'].value_counts(normalize=True) * 100
+            bank_target_perc = bank_target_perc.sort_index()
+
         if not bank_raw_target_perc.empty:
             # Gráfico de barras para os dados brutos
             fig, ax = plt.subplots(1, 2, figsize=(10, 5))
-            sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
+            sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc.to_frame(), ax=ax[0])
             ax[0].set_title('Dados brutos', fontweight="bold")
             ax[0].set_xlabel('y')
             ax[0].set_ylabel('Porcentagem')
@@ -158,7 +167,7 @@ def main():
 
         if not bank_target_perc.empty:
             # Gráfico de barras para os dados filtrados
-            sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
+            sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc.to_frame(), ax=ax[1])
             ax[1].set_title('Dados filtrados', fontweight="bold")
             ax[1].set_xlabel('y')
             ax[1].set_ylabel('Porcentagem')
