@@ -42,7 +42,6 @@ def to_excel(df):
     return processed_data
 
 # Função principal da aplicação
-# Função principal da aplicação
 def main():
     # Configuração inicial da página da aplicação
     st.set_page_config(page_title='Telemarketing analisys',
@@ -145,31 +144,18 @@ def main():
         st.write(bank.head())
 
         # Criação dos gráficos
-        st.write('## Proporção de aceite')
-        fig, ax = plt.subplots(1, 2, figsize=(10, 5))
-
-        bank_raw_target_perc = bank_raw.y.value_counts(normalize=True).to_frame() * 100
-        bank_raw_target_perc = bank_raw_target_perc.sort_index()
-        
-        try:
-            bank_target_perc = bank.y.value_counts(normalize=True).to_frame() * 100
-            bank_target_perc = bank_target_perc.sort_index()
-        except:
-            st.error('Erro no filtro')
-
-               # Gráfico 1 - Dados brutos
-        st.write('## Proporção de aceite')
+    st.write('## Proporção de aceite')
 
     # Gráfico de barras para os dados brutos
     fig, ax = plt.subplots(1, 2, figsize=(10, 5))
-    bank_raw_target_perc.plot(kind='bar', ax=ax[0], legend=None)
+    sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
     ax[0].set_title('Dados brutos', fontweight="bold")
     ax[0].set_xlabel('y')
     ax[0].set_ylabel('Porcentagem')
     ax[0].set_xticklabels(bank_raw_target_perc.index, rotation=45)
 
     # Gráfico de barras para os dados filtrados
-    bank_target_perc.plot(kind='bar', ax=ax[1], legend=None)
+    sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
     ax[1].set_title('Dados filtrados', fontweight="bold")
     ax[1].set_xlabel('y')
     ax[1].set_ylabel('Porcentagem')
@@ -180,3 +166,10 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
