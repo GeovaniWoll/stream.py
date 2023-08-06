@@ -64,7 +64,7 @@ def main():
     data_file_1 = st.sidebar.file_uploader("Bank marketing data", type=['csv', 'xlsx'])
 
     # Verifica se há conteúdo carregado na aplicação
-    if data_file_1 is not None:
+    if (data_file_1 is not None):
         bank_raw = load_data(data_file_1)
         bank = bank_raw.copy()
 
@@ -157,23 +157,42 @@ def main():
         except:
             st.error('Erro no filtro')
 
-        # Gráfico 1 - Dados brutos
-        if graph_type == 'Barras':
-            sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
-            ax[0].bar_label(ax[0].containers[0])
-            ax[0].set_title('Dados brutos', fontweight="bold")
-        else:
-            bank_raw_target_perc.plot(kind='pie', autopct='%.2f', y='y', ax=ax[0])
-            ax[0].set_title('Dados brutos', fontweight="bold")
+               # Gráfico 1 - Dados brutos
+        st.write('## Proporção de aceite')
+        if bank_raw['y'].nunique() >= 2:
+            # Gráfico de barras ou pizza
+            fig, ax = plt.subplots(1, 2, figsize=(10, 4))
 
-        # Gráfico 2 - Dados filtrados
-        if graph_type == 'Barras':
-            sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
-            ax[1].bar_label(ax[1].containers[0])
-            ax[1].set_title('Dados filtrados', fontweight="bold")
+            bank_raw_target_perc = bank_raw['y'].value_counts(normalize=True).to_frame() * 100
+            bank_raw_target_perc = bank_raw_target_perc.sort_index()
+
+            if graph_type == 'Barras':
+                sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
+                ax[0].bar_label(ax[0].containers[0])
+                ax[0].set_title('Dados brutos', fontweight="bold")
+            else:
+                bank_raw_target_perc.plot(kind='pie', autopct='%.2f', y='y', ax=ax[0])
+                ax[0].set_title('Dados brutos', fontweight="bold")
+
+            # Gráfico 2 - Dados filtrados
+            if bank['y'].nunique() >= 2:
+                bank_target_perc = bank['y'].value_counts(normalize=True).to_frame() * 100
+                bank_target_perc = bank_target_perc.sort_index()
+
+                if graph_type == 'Barras':
+                    sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
+                    ax[1].bar_label(ax[1].containers[0])
+                    ax[1].set_title('Dados filtrados', fontweight="bold")
+                else:
+                    bank_target_perc.plot(kind='pie', autopct='%.2f', y='y', ax=ax[1])
+                    ax[1].set_title('Dados filtrados', fontweight="bold")
+
+                # Exibição dos gráficos
+                st.pyplot(fig)
+            else:
+                st.warning("Nenhum registro com aceite positivo ou negativo após os filtros.")
         else:
-            bank_target_perc.plot(kind='pie', autopct='%.2f', y='y', ax=ax[1])
-            ax[1].set_title('Dados filtrados', fontweight="bold")
+            st.warning("Nenhum registro com aceite positivo ou negativo antes dos filtros.")
 
         # Exibição dos gráficos
         st.pyplot(fig)
