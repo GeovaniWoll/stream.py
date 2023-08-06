@@ -42,17 +42,17 @@ def to_excel(df):
     return processed_data
 
 # Função principal da aplicação
+# Função principal da aplicação
 def main():
     # Configuração inicial da página da aplicação
-    st.set_page_config(
-        page_title='Telemarketing analysis',
-        page_icon='telemarketing_icon.png',
-        layout="wide",
-        initial_sidebar_state='expanded'
-    )
+    st.set_page_config(page_title='Telemarketing analisys',
+                       page_icon='telmarketing_icon.png',
+                       layout="wide",
+                       initial_sidebar_state='expanded'
+                       )
 
     # Título principal da aplicação
-    st.write('# Telemarketing analysis')
+    st.write('# Telemarketing analisys')
     st.markdown("---")
     
     # Apresenta a imagem na barra lateral da aplicação
@@ -159,43 +159,24 @@ def main():
 
                # Gráfico 1 - Dados brutos
         st.write('## Proporção de aceite')
-        if bank_raw['y'].nunique() >= 2:
-            # Gráfico de barras ou pizza
-            fig, ax = plt.subplots(1, 2, figsize=(10, 4))
 
-            bank_raw_target_perc = bank_raw['y'].value_counts(normalize=True).to_frame() * 100
-            bank_raw_target_perc = bank_raw_target_perc.sort_index()
+    # Gráfico de barras para os dados brutos
+    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+    bank_raw_target_perc.plot(kind='bar', ax=ax[0], legend=None)
+    ax[0].set_title('Dados brutos', fontweight="bold")
+    ax[0].set_xlabel('y')
+    ax[0].set_ylabel('Porcentagem')
+    ax[0].set_xticklabels(bank_raw_target_perc.index, rotation=45)
 
-            if graph_type == 'Barras':
-                sns.barplot(x=bank_raw_target_perc.index, y='y', data=bank_raw_target_perc, ax=ax[0])
-                ax[0].bar_label(ax[0].containers[0])
-                ax[0].set_title('Dados brutos', fontweight="bold")
-            else:
-                bank_raw_target_perc.plot(kind='pie', autopct='%.2f', y='y', ax=ax[0])
-                ax[0].set_title('Dados brutos', fontweight="bold")
+    # Gráfico de barras para os dados filtrados
+    bank_target_perc.plot(kind='bar', ax=ax[1], legend=None)
+    ax[1].set_title('Dados filtrados', fontweight="bold")
+    ax[1].set_xlabel('y')
+    ax[1].set_ylabel('Porcentagem')
+    ax[1].set_xticklabels(bank_target_perc.index, rotation=45)
 
-            # Gráfico 2 - Dados filtrados
-            if bank['y'].nunique() >= 2:
-                bank_target_perc = bank['y'].value_counts(normalize=True).to_frame() * 100
-                bank_target_perc = bank_target_perc.sort_index()
-
-                if graph_type == 'Barras':
-                    sns.barplot(x=bank_target_perc.index, y='y', data=bank_target_perc, ax=ax[1])
-                    ax[1].bar_label(ax[1].containers[0])
-                    ax[1].set_title('Dados filtrados', fontweight="bold")
-                else:
-                    bank_target_perc.plot(kind='pie', autopct='%.2f', y='y', ax=ax[1])
-                    ax[1].set_title('Dados filtrados', fontweight="bold")
-
-                # Exibição dos gráficos
-                st.pyplot(fig)
-            else:
-                st.warning("Nenhum registro com aceite positivo ou negativo após os filtros.")
-        else:
-            st.warning("Nenhum registro com aceite positivo ou negativo antes dos filtros.")
-
-        # Exibição dos gráficos
-        st.pyplot(fig)
+    # Exibe os gráficos
+    st.pyplot(fig)
 
 if __name__ == '__main__':
     main()
